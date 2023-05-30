@@ -9,10 +9,19 @@
   </head>
   <body>
     <ul id="messages">
-
     </ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+
+    <form class="form" id="login-form">
+      <div class="label">Login:</div>
+      <input class="input" name="login" autocomplete="off" />
+      <div class="label">Password:</div>
+      <input class="input" name="password" autocomplete="off" />
+      <button type="submit">Login</button>
+    </form>
+
+    <form class="form hide" id="chat-form" action="">
+      <input class="input" name="message" autocomplete="off" />
+      <button type="submit">Send</button>
     </form>
   </body>
 </html>
