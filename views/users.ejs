@@ -7,36 +7,22 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
+<% list.forEach((user) => { %>
         <tr>
-          <td>1</td>
-          <td>John Doe</td>
-          <td>johndoe@example.com</td>
-          <td>Admin</td>
+          <td><%- user._id %></td>
+          <td><%- user.login %></td>
           <td>
             <a href="#" class="btn btn-primary btn-sm">Edit</a>
-            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+            <a href="/users/delete/<%- user._id %>" class="btn btn-danger btn-sm">Delete</a>
           </td>
         </tr>
-        <tr>
-          <td>2</td>
-          <td>Jane Smith</td>
-          <td>janesmith@example.com</td>
-          <td>User</td>
-          <td>
-            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-            <a href="#" class="btn btn-danger btn-sm">Delete</a>
-          </td>
-        </tr>
-        <!-- Дополнительные строки таблицы с пользователями -->
+<% }); %>
       </tbody>
     </table>
-
-    <a href="#" class="btn btn-success">Add User</a>
+    <a href="/users/add" class="btn btn-success">Add User</a>
   </div>
 <%- include('./_footer.ejs') %>
