@@ -1,36 +1,3 @@
-let authLogin = null;
-let authToken = null;
-
-async function doLogin(login, password) {
-  const response = await fetch('/login', {
-    method: 'POST',
-    body: JSON.stringify({
-      login,
-      password,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const responseData = await response.json();
-  return responseData;
-}
-
-async function doRegister(login, password) {
-  const response = await fetch('/register', {
-    method: 'POST',
-    body: JSON.stringify({
-      login,
-      password,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const responseData = await response.json();
-  return responseData;
-}
-
 $(function () {
   var socket = io();
 
