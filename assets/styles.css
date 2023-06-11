@@ -21,6 +21,10 @@ body {
   line-height: 2.5rem;
 }
 
+.form .link {
+  line-height: 2.5rem;
+}
+
 .form.hide {
   display: none;
 }
