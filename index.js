@@ -10,7 +10,7 @@ const sharedsession = require('express-socket.io-session');
 const client = require('./lib/db');
 const { ObjectId } = require('mongodb');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 async function main() {
   await initDemoData();

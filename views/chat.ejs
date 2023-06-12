@@ -27,10 +27,8 @@
 <% messages.forEach((message) => { %>
                 <div class="message">
                   <div class="message-info">
-                    <span class="message-sender"><%- message.fromName %></span>
-                    <span class="message-time">10:35 AM</span>
+                    <span class="message-sender"><b><%- message.fromName %></b></span><span class="message-time"><b>10:35 AM</b></span><span>: </span><span class="message-content"><%- message.message %></span>
                   </div>
-                  <div class="message-content"><%- messages.message %></div>
                 </div>
 <% }) %>
               </div>
@@ -57,7 +55,7 @@
     var input = document.getElementById('input');
     
     socket.on('chat message', function(msg) {
-      $('#messages').append(`<div class="message"><div class="message-info"><span class="message-sender">${msg.fromName} </span><span class="message-time">10:35 AM</span></div><div class="message-content">${msg.message}</div></div>`);
+      $('#messages').append(`<div class="message"><div class="message-info"><span class="message-sender"><b>${msg.fromName}</b></span><span class="message-time"><b>10:35 AM</b></span><span>: </span><span class="message-content">${msg.message}</span></div></div>`);
     });
 
     $('#chat-form').submit(function (event) {
