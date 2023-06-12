@@ -6,6 +6,9 @@ const { glob } = require('glob');
 const cookieParser = require('cookie-parser');
 const sessions = require('express-session');
 const initDemoData = require('./lib/demo-data');
+const sharedsession = require('express-socket.io-session');
+const client = require('./lib/db');
+const { ObjectId } = require('mongodb');
 
 const port = process.env.PORT || 3000;
 
@@ -23,12 +26,15 @@ async function main() {
   app.use(cookieParser());
 
   const oneDay = 1000 * 60 * 60 * 24;
-  app.use(sessions({
-      secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-      saveUninitialized:true,
-      cookie: { maxAge: oneDay },
-      resave: false 
-  }));
+
+  const sessionManager = sessions({
+    secret: 'thisismysecrctekeyfhrgfgrfrty84fwir767',
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false,
+  });
+
+  app.use(sessionManager);
 
   const controllers = await glob(`${__dirname}/controllers/*.js`);
   for (let index = 0; index < controllers.length; index++) {
@@ -39,9 +45,36 @@ async function main() {
   
   const io = new socketIo.Server(httpServer, { /* options */ });
   
+  io.use(sharedsession(sessionManager, {
+    autoSave: true
+  })); 
+
   io.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
-      io.emit('chat message', `${socket.token}: ${msg}`);
+    const session = socket.request.session;
+
+    socket.on('chat message', async (msg) => {
+      if (socket.handshake.session.userId) {
+        const userId = socket.handshake.session.userId;
+        const database = client.db('chatdb');
+        const users = database.collection('users');
+        const messages = database.collection('messages');
+        const user = await users.findOne({
+          _id: new ObjectId(userId),
+        });
+        const { message, to } = msg;
+        await messages.insertOne({
+          message,
+          from: userId,
+          to,
+          time: +(new Date()),
+        });
+        io.emit('chat message', {
+          from: userId,
+          fromName: user.login,
+          to,
+          message,
+        });
+      }
     });
   
     socket.on('login', (msg) => {
