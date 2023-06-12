@@ -1,27 +1,46 @@
 const { checkAuth } = require('../lib/express');
-const client = require('../lib/db');
+const { client, getUserList } = require('../lib/db');
+const moment = require('moment');
+const _ = require('lodash');
 
 async function actionChat(req, res) {
   const chatId = req.params.chatId;
   const database = client.db('chatdb');
-  const users = database.collection('users');
   const messages = database.collection('messages');
 
-  let list = await users.find({}).toArray();
-  list = list.filter(user => {
-    return user._id.toString() !== req.session.userId;
+  const fullList = await getUserList();
+  const list = fullList.filter(user => {
+    return user.id !== req.session.userId;
   });
 
   const condition = {};
   if (chatId) {
-    const msgList = await messages.find(condition).toArray();
-    condition.from = chatId;
-    condition.to = req.sessiom.userId;
+    condition.$or = [
+      {
+        from: chatId,
+        to: req.session.userId,
+      },
+      {
+        from: req.session.userId,
+        to: chatId,
+      },
+    ];
   } else {
     condition.to = null;
   }
 
-  const msgList = await messages.find(condition).toArray();
+  const msgList = (await messages.find(condition).toArray()).map(message => {
+    const fromName = _.find(fullList, (user) => {
+      return user.id === message.from;
+    });
+    return {
+      time: moment(message.time || 0).format(),
+      message: message.message,
+      fromName: fromName.login || 'Unknown',
+      to: null,
+      from: null,
+    };
+  });
 
   res.render('chat', {
     users: list,

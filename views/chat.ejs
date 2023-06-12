@@ -11,7 +11,7 @@
             <ul class="list-group">
               <li class="list-group-item"><a href="/chat">Common</a></li>
 <% users.forEach((user) => { %>
-              <li class="list-group-item"><a href="/chat/<%- user._id %>"><%- user.login %></a></li>
+              <li class="list-group-item"><a href="/chat/<%- user.id %>"><%- user.login %></a></li>
 <% }); %>
             </ul>
           </div>
@@ -27,7 +27,7 @@
 <% messages.forEach((message) => { %>
                 <div class="message">
                   <div class="message-info">
-                    <span class="message-sender"><b><%- message.fromName %></b></span><span class="message-time"><b>10:35 AM</b></span><span>: </span><span class="message-content"><%- message.message %></span>
+                    <span class="message-header"><b><%- message.fromName %>(10:35 AM): </b></span><span class="message-content"><%- message.message %></span>
                   </div>
                 </div>
 <% }) %>
@@ -55,7 +55,7 @@
     var input = document.getElementById('input');
     
     socket.on('chat message', function(msg) {
-      $('#messages').append(`<div class="message"><div class="message-info"><span class="message-sender"><b>${msg.fromName}</b></span><span class="message-time"><b>10:35 AM</b></span><span>: </span><span class="message-content">${msg.message}</span></div></div>`);
+      $('#messages').append(`<div class="message"><div class="message-info"><span class="message-header"><b>${msg.fromName}(10:35 AM): </b></span><span class="message-content">${msg.message}</span></div></div>`);
     });
 
     $('#chat-form').submit(function (event) {

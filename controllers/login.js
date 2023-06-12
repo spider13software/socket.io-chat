@@ -1,4 +1,4 @@
-const client = require('../lib/db');
+const { client } = require('../lib/db');
 
 module.exports = function (app) {
   app.get('/login', async (req, res) => {

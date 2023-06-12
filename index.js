@@ -7,8 +7,9 @@ const cookieParser = require('cookie-parser');
 const sessions = require('express-session');
 const initDemoData = require('./lib/demo-data');
 const sharedsession = require('express-socket.io-session');
-const client = require('./lib/db');
+const { client } = require('./lib/db');
 const { ObjectId } = require('mongodb');
+const moment = require('moment');
 
 const port = process.env.PORT || 3001;
 
@@ -62,16 +63,18 @@ async function main() {
           _id: new ObjectId(userId),
         });
         const { message, to } = msg;
+        const time = moment().unix();
         await messages.insertOne({
           message,
           from: userId,
           to,
-          time: +(new Date()),
+          time,
         });
         io.emit('chat message', {
           from: userId,
           fromName: user.login,
           to,
+          time: moment(time).format(),
           message,
         });
       }

@@ -1,4 +1,4 @@
-const client = require('../lib/db');
+const { client } = require('../lib/db');
 
 const ADMIN_LOGIN = 'admin';
 const ADMIN_PASSWORD = 'password';
